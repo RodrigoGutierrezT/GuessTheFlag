@@ -34,6 +34,10 @@ struct ContentView: View {
                     .font(.largeTitle.bold())
                     .foregroundStyle(.white)
                 
+                Text("Attemp \(currentAttempt - 1)/\(maxAttemps)")
+                    .font(.title3.bold())
+                    .foregroundStyle(.white)
+                
                 VStack(spacing: 15) {
                     VStack {
                         Text("Tap de flag of")
@@ -89,12 +93,12 @@ struct ContentView: View {
         if correctAnswer == number {
             titleScore = "Correct"
             score += 1
-            currentAttempt += 1
         } else {
             titleScore = "Wrong"
             currentAnswer = countries[number]
-            currentAttempt += 1
         }
+        
+        currentAttempt += 1
         
         if currentAttempt <= maxAttemps{
             showingScore = true
