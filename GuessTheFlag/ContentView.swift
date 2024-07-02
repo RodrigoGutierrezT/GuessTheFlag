@@ -21,6 +21,23 @@ struct ContentView: View {
     
     @State private var showingGameFinished = false
     
+    struct FlagImage: View {
+        var number: Int
+        var countries: [String]
+        var action: (Int) -> Void
+        
+        var body: some View {
+            Button {
+                action(number)
+            } label: {
+                Image(countries[number])
+                    .clipShape(.capsule)
+                    .shadow(radius: 5)
+            }
+        }
+    }
+    
+    
     var body: some View {
         ZStack {
             RadialGradient(stops: [
@@ -49,13 +66,7 @@ struct ContentView: View {
                     }
                     
                     ForEach(0..<3) { number in
-                        Button {
-                            flagTapped(number)
-                        } label: {
-                            Image(countries[number])
-                                .clipShape(.capsule)
-                                .shadow(radius: 5)
-                        }
+                        FlagImage(number: number, countries: countries, action: flagTapped)
                     }
                 }
                 .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
