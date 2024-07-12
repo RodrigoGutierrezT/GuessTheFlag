@@ -21,12 +21,16 @@ struct ContentView: View {
     
     @State private var showingGameFinished = false
     
+    @State private var animationAmount = 0.0
+    @State private var opacityAmount = 1.0
+    
     struct FlagImage: View {
         var number: Int
         var countries: [String]
         var action: (Int) -> Void
         
         var body: some View {
+            
             Button {
                 action(number)
             } label: {
@@ -44,7 +48,7 @@ struct ContentView: View {
                 .init(color: Color(red: 0.1, green: 0.2, blue: 0.45), location: 0.3),
                 .init(color: Color(red: 0.76, green: 0.15, blue: 0.3), location: 0.3)
             ], center: .top, startRadius: 200, endRadius: 700)
-                .ignoresSafeArea()
+            .ignoresSafeArea()
             VStack {
                 Spacer()
                 Text("Guess the Flag")
@@ -66,7 +70,13 @@ struct ContentView: View {
                     }
                     
                     ForEach(0..<3) { number in
-                        FlagImage(number: number, countries: countries, action: flagTapped)
+                        if number == correctAnswer {
+                            FlagImage(number: number, countries: countries, action: flagTapped)
+                                .rotation3DEffect(.degrees(animationAmount),axis: (x: 0, y: 0, z: 1))
+                        } else {
+                            FlagImage(number: number, countries: countries, action: flagTapped)
+                                .opacity(opacityAmount)
+                        }
                     }
                 }
                 .frame(maxWidth: /*@START_MENU_TOKEN@*/.infinity/*@END_MENU_TOKEN@*/)
@@ -104,6 +114,15 @@ struct ContentView: View {
         if correctAnswer == number {
             titleScore = "Correct"
             score += 1
+            
+            withAnimation(.spring(duration: 0.8, bounce: 0.3)) {
+                animationAmount += 360
+            }
+            
+            withAnimation {
+                opacityAmount = 0.25
+            }
+            
         } else {
             titleScore = "Wrong"
             currentAnswer = countries[number]
@@ -122,6 +141,7 @@ struct ContentView: View {
         countries.shuffle()
         correctAnswer = Int.random(in: 0...2)
         currentAnswer = ""
+        opacityAmount = 1
     }
     
     func resetGame() {
